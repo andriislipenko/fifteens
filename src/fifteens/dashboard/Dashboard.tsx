@@ -1,24 +1,65 @@
 import React from 'react';
+import { CellState } from '../entities/CellState';
 import Cell from './cell/Cell';
 import styles from './Dashboard.module.scss';
 
 class Dashboard extends React.Component<any, DashboardState> {
+    private cells: JSX.Element[];
+
     constructor(props: any) {
         super(props);
 
         this.onCellClicked = this.onCellClicked.bind(this);
 
-        this.state = { 
-            cells: this.generateCells()
+        this.state = {
+            cellsState: this.initCellsState()
         };
     }
     
     public render(): JSX.Element {
+        this.cells = this.collectCells();
+
         return (
             <div className={styles.dashboard}>
-                {this.state.cells.flat()}
+                {this.cells}
             </div>
         );
+    }
+
+    private collectCells(): JSX.Element[] {
+        let cells: JSX.Element[] = [];
+
+        let number;
+        for (let i = 0; i < 16; i++) {
+            number = i + 1 < 16 ? i + 1 : null;
+            
+            cells.push(
+                <Cell 
+                    number={number}
+                    x={this.state.cellsState[i].x}
+                    y={this.state.cellsState[i].y}
+                    onClick={this.onCellClicked}
+                    key={i}
+                />
+            )
+        }
+
+        return cells;
+    }
+
+    private initCellsState(): CellState[] {
+        let cellsState: CellState[] = [];
+
+        for (let i = 1; i <= 4; i++) {
+            for (let j = 1; j <= 4; j++) {
+                cellsState.push({
+                    x: i,
+                    y: j
+                });
+            }
+        }
+
+        return cellsState;
     }
 
     private onCellClicked(number: number): void {
@@ -27,78 +68,37 @@ class Dashboard extends React.Component<any, DashboardState> {
         this.handleCellsState(number);
     }
 
-    private generateCells(): JSX.Element[][] {
-        const cells: JSX.Element[][] = [];
-
-        let k: number = 1;
-
-        for (let i = 0; i < 4; i++) {
-            cells[i] = [];
-            for (let j = 0; j < 4; j++) {
-                if (k > 15) {
-                    cells[i][j] = <Cell
-                        number={null}
-                        key={'' + i + j}
-                        onClick={this.onCellClicked}
-                    />;
-                    break;
-                }
-
-                cells[i][j] = <Cell
-                    number={k}
-                    key={'' + i + j}
-                    onClick={this.onCellClicked}
-                />;
-
-                k++;
-            }
-        }
-
-        return cells;
-    }
-
     private handleCellsState(number: number): void {
-        let prevX: number = null;
-        let prevY: number = null;
-        let nextX: number = null;
-        let nextY: number = null;
+        const clickedCellIndex: number = number - 1;
+        const emptyCellIndex: number = this.cells.length - 1;
 
-        const cells: JSX.Element[][] = this.state.cells;
+        const clickedCell: JSX.Element = this.cells[clickedCellIndex];
+        const emptyCell: JSX.Element = this.cells[emptyCellIndex];
 
-        for (let i = 0; i < 4; i++) {
-            for (let j = 0; j < 4; j++) {
-                if (cells[i][j].props.number === number) {
-                    prevX = i;
-                    prevY = j;
-                }
+        let prevX: number = clickedCell.props.x;
+        let prevY: number = clickedCell.props.y;
+        let nextX: number = emptyCell.props.x;
+        let nextY: number = emptyCell.props.y;
 
-                if (cells[i][j].props.number == null) {
-                    nextX = i;
-                    nextY = j
-                }
-            }
+        if (!this.isEmptyAround(prevX, prevY, nextX, nextY)) return;
 
-            if (prevX && nextX) break;
-        }
+        let cellsState: CellState[] = this.state.cellsState.slice();
 
-        if (this.isEmptyAround(prevX, prevY, nextX, nextY)) return;
+        cellsState[clickedCellIndex].x = nextX;
+        cellsState[clickedCellIndex].y = nextY;
+        cellsState[emptyCellIndex].x = prevX;
+        cellsState[emptyCellIndex].y = prevY;
 
-        const temp: JSX.Element = cells[prevX][prevY];
-        cells[prevX][prevY] = cells[nextX][nextY];
-        cells[nextX][nextY] = temp;
-
-        this.setState({cells});
+        this.setState({cellsState});
     }
 
     private isEmptyAround(prevX: number, prevY: number, nextX: number, nextY: number): boolean {
-        if (!(prevX === nextX || prevY === nextY)) return true;
-
         if (prevX === nextX) {
-            if (!(prevY - 1 === nextY || prevY + 1 === nextY)) return true;
+            if (prevY - 1 === nextY || prevY + 1 === nextY) return true;
         }
 
         if (prevY === nextY) {
-            if(!(prevX - 1 === nextX || prevX + 1 === nextX)) return true;
+            if(prevX - 1 === nextX || prevX + 1 === nextX) return true;
         }
 
         return false;
@@ -106,7 +106,7 @@ class Dashboard extends React.Component<any, DashboardState> {
 }
 
 interface DashboardState {
-    cells: JSX.Element[][];
+    cellsState: CellState[];
 }
 
 export default Dashboard;
