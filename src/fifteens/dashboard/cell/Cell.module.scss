@@ -1,0 +1,22 @@
+.container {
+    border: 1px solid green;
+    border-collapse: collapse;
+    text-align: center;
+    position: relative;
+
+    &::before {
+        content: '';
+        width: 0;
+        padding-bottom: 100%;
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .number {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: larger;
+    }
+}

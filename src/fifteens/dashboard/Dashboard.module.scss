@@ -1,0 +1,9 @@
+.dashboard {
+    display: grid;
+    padding: 5px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 5px;
+    width: 100%;
+    border: 1px solid black;
+    box-sizing: border-box;
+}
