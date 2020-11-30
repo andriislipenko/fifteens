@@ -13,7 +13,7 @@ class Cell extends React.Component<CellProps> {
             <div 
                 className={containerClassNames}
                 style={gridPosition}
-                onClick={(e) => this.props.onClick(this.props.number)}
+                onMouseDown={(e) => this.props.onClick(this.props.number)}
             >
                 <div className={styles.number}>{this.props.number}</div>
             </div>

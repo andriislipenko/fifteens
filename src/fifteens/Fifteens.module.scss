@@ -1,0 +1,17 @@
+.container {
+    width: 100%;
+    margin: auto;
+    user-select: none;
+}
+
+@media screen and (min-width: 600px) {
+    .container {
+        width: 50%;
+    }
+}
+
+@media screen and (min-width: 900px) {
+    .container {
+        width: 400px;
+    }
+}

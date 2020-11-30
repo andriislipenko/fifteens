@@ -3,20 +3,33 @@ import { CellState } from '../entities/CellState';
 import Cell from './cell/Cell';
 import styles from './Dashboard.module.scss';
 
-class Dashboard extends React.Component<any, DashboardState> {
+class Dashboard extends React.Component<DashboardProps, DashboardState> {
+    private readonly FINAL_STATE: CellState[] = this.createFinalState();
+
     private cells: JSX.Element[];
 
-    constructor(props: any) {
+    constructor(props: DashboardProps) {
         super(props);
 
         this.onCellClicked = this.onCellClicked.bind(this);
 
         this.state = {
-            cellsState: this.initCellsState()
-        };
+            cellsState: this.createRandomCellsState()
+        }
     }
     
-    public render(): JSX.Element {
+    render(): JSX.Element {
+        if (this.props.shouldStartNewGame) {
+            this.setState({
+                cellsState: this.createRandomCellsState()
+            });
+            this.props.onGameStarts();
+        }
+
+        if (this.props.isGameProceeds && this.checkCompleteness()) {
+            this.props.onGameStoped();
+        }
+
         this.cells = this.collectCells();
 
         return (
@@ -47,23 +60,8 @@ class Dashboard extends React.Component<any, DashboardState> {
         return cells;
     }
 
-    private initCellsState(): CellState[] {
-        let cellsState: CellState[] = [];
-
-        for (let i = 1; i <= 4; i++) {
-            for (let j = 1; j <= 4; j++) {
-                cellsState.push({
-                    x: i,
-                    y: j
-                });
-            }
-        }
-
-        return cellsState;
-    }
-
     private onCellClicked(number: number): void {
-        if (!number) return;
+        if (!number || !this.props.isGameProceeds) return;
 
         this.handleCellsState(number);
     }
@@ -103,6 +101,55 @@ class Dashboard extends React.Component<any, DashboardState> {
 
         return false;
     }
+
+    private checkCompleteness(): boolean {
+        for (let i = 0; i < this.FINAL_STATE.length; i++) {
+            const x = this.state.cellsState[i].x;
+            const y = this.state.cellsState[i].y;
+
+            if (x !== this.FINAL_STATE[i].x || y !== this.FINAL_STATE[i].y) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private createRandomCellsState(): CellState[] {
+        const cellsStateDonor: CellState[] = this.createFinalState();
+        let cellsState: CellState[] = [];
+
+        for(let i = 0; i < this.FINAL_STATE.length; i++) {
+            const randomIndex: number = Math.floor(Math.random() * cellsStateDonor.length);
+
+            cellsState.push(cellsStateDonor[randomIndex]);
+            cellsStateDonor.splice(randomIndex, 1);
+        }
+
+        return cellsState;
+    }
+
+    private createFinalState(): CellState[] {
+        let cellsState: CellState[] = [];
+
+        for (let i = 1; i <= 4; i++) {
+            for (let j = 1; j <= 4; j++) {
+                cellsState.push({
+                    x: i,
+                    y: j
+                });
+            }
+        }
+
+        return cellsState;
+    }
+}
+
+interface DashboardProps {
+    isGameProceeds: boolean;
+    shouldStartNewGame: boolean;
+    onGameStarts: () => void;
+    onGameStoped: () => void;
 }
 
 interface DashboardState {
