@@ -32,9 +32,22 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
 
         this.cells = this.collectCells();
 
+        let onDoneBlock: JSX.Element = null;
+        if (!this.props.isGameProceeds) {
+            onDoneBlock = <div className={styles.doneMessage}>Done!</div>
+        }
+
+        const dashboardStyleClasses: string = `
+            ${styles.dashboard}
+            ${!this.props.isGameProceeds ? styles.onDone : ''}
+        `;
+
         return (
-            <div className={styles.dashboard}>
-                {this.cells}
+            <div className={styles.container}>
+                <div className={dashboardStyleClasses}>
+                    {this.cells}
+                </div>
+                {onDoneBlock}
             </div>
         );
     }

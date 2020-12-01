@@ -26,7 +26,9 @@ class Fifteens extends React.Component<any, FifteensState> {
                     onGameStarts={this.onGameStarted}
                     onGameStoped={this.onGameStoped}
                 />
-                <NewGameButton onNewGame={this.onNewGame}/>
+                <div className={styles.newGameButtonContainer}>
+                    <NewGameButton onNewGame={this.onNewGame}/>
+                </div>
             </div>
         );
     }

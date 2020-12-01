@@ -1,0 +1,17 @@
+.newGameButton {
+    font-size: large;
+    font-weight: bold;
+    border: 1px #00cc00 solid;
+    border-radius: 3px;
+    background: none;
+    outline: none;
+    color: #00cc00;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: all 0.2s ease-in;
+}
+
+.newGameButton:hover {
+    background-color: #00cc00;
+    color: white;
+}

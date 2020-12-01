@@ -1,9 +1,26 @@
-.dashboard {
-    display: grid;
-    padding: 5px;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 5px;
-    width: 100%;
-    border: 1px solid black;
-    box-sizing: border-box;
+.container {
+    position: relative;
+
+    .dashboard {
+        display: grid;
+        padding: 5px;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 5px;
+        width: 100%;
+        border: 1px solid black;
+        box-sizing: border-box;
+    }
+    
+    .doneMessage {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #00cc00;
+        font-size: xx-large;
+    }
+    
+    .onDone {
+        opacity: .5;
+    }
 }

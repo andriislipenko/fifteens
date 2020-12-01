@@ -1,9 +1,10 @@
 import React from 'react';
+import styles from './NewGameButton.module.scss';
 
 class NewGameButton extends React.Component<NewGameButtonProps> {
     render(): JSX.Element {
         return (
-            <button onClick={this.props.onNewGame}>
+            <button className={styles.newGameButton} onClick={this.props.onNewGame}>
                 New game
             </button>
         );
