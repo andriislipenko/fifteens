@@ -4,6 +4,21 @@
     user-select: none;
 }
 
+.countersContainer {
+    .timer, .movesCounter {
+        display: inline-block;
+        padding: 5px 10px;
+    }
+
+    .timer {
+        float: right;
+    }
+
+    .movesCounter {
+        float: left;
+    }
+}
+
 .newGameButtonContainer {
     text-align: center;
     margin: 10px 0;

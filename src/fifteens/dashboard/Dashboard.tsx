@@ -101,6 +101,7 @@ class Dashboard extends React.Component<DashboardProps, DashboardState> {
         cellsState[emptyCellIndex].y = prevY;
 
         this.setState({cellsState});
+        this.props.onCellMoved();
     }
 
     private isEmptyAround(prevX: number, prevY: number, nextX: number, nextY: number): boolean {
@@ -163,6 +164,7 @@ interface DashboardProps {
     shouldStartNewGame: boolean;
     onGameStarts: () => void;
     onGameStoped: () => void;
+    onCellMoved: () => void;
 }
 
 interface DashboardState {
